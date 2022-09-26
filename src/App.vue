@@ -1,10 +1,7 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+    <router-view></router-view>
 </template>
+<<<<<<< HEAD
 
 <style lang="scss">
 #app {
@@ -28,3 +25,9 @@ nav {
   }
 }
 </style>
+=======
+<script>
+export default {}
+</script>
+<style lang=""></style>
+>>>>>>> 62dea47 (手机号登录)
