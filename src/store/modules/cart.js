@@ -43,5 +43,20 @@ export default {
                 }
             })
         }
+    },
+    getters: {
+        // 有效商品列表
+        // 有效商品： 库存  > 0  ==》stock 商品标识符为 true ==》isEffective
+        validList(state) {
+            return state.list.filter(goods => goods.stock > 0 && goods.isEffective)
+        },
+        // 有效商品总件数
+        validTotal(state, getters) {
+            return getters.validList.reduce((p, c) => p + c.count, 0)
+        },
+        // 有效商品总金额
+        validAmount(state, getters) {
+            return getters.validList.reduce((p, c) => p + c.count * c.nowPrice, 0)
+        }
     }
 }
