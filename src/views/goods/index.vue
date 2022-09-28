@@ -1,5 +1,5 @@
 <template>
-<<<<<<< HEAD
+	
   <div class="xtx-goods-page" v-if="goods">
     <div class="container">
       <!-- 面包屑 -->
@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-=======
+
     <div class="xtx-goods-page" v-if="goods">
         <div class="container">
             <!-- 面包屑 -->
@@ -91,7 +91,7 @@
             </div>
         </div>
     </div>
->>>>>>> 62dea47 (手机号登录)
+
 </template>
 
 <script>
@@ -103,7 +103,6 @@ import GoodsSku from './components/goods-sku'
 import GoodsHot from './components/goods-hot'
 import GoodsTabs from './components/goods-tabs'
 import GoodsWarn from './components/goods-warn'
-<<<<<<< HEAD
 import {useRoute} from 'vue-router'
 import {useStore} from 'vuex'
 import {findGoods} from '@/api/product'
@@ -183,7 +182,8 @@ const useGoods = () => {
     {immediate: true}
   )
   return goods
-=======
+
+  
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { findGoods } from '@/api/product'
@@ -263,13 +263,13 @@ const useGoods = () => {
         { immediate: true }
     )
     return goods
->>>>>>> 62dea47 (手机号登录)
+
 }
 </script>
 
 <style scoped lang="less">
 .goods-info {
-<<<<<<< HEAD
+
   min-height: 600px;
   background: #fff;
   display: flex;
@@ -303,7 +303,7 @@ const useGoods = () => {
   min-height: 600px;
   background: #fff;
   margin-top: 20px;
-=======
+
     min-height: 600px;
     background: #fff;
     display: flex;
@@ -337,6 +337,6 @@ const useGoods = () => {
     min-height: 600px;
     background: #fff;
     margin-top: 20px;
->>>>>>> 62dea47 (手机号登录)
+
 }
 </style>
