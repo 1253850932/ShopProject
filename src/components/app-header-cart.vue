@@ -19,7 +19,7 @@
                             <p class="count">x{{ goods.count }}</p>
                         </div>
                     </RouterLink>
-                    <i class="iconfont icon-close-new"></i>
+                    <i @click="deleteGoods(goods.skuId)" class="iconfont icon-close-new"></i>
                 </div>
             </div>
             <div class="foot">
@@ -33,8 +33,19 @@
     </div>
 </template>
 <script>
+import { useStore } from 'vuex'
+
 export default {
-    name: 'AppHeaderCart'
+    name: 'AppHeaderCart',
+    setup() {
+        const store = useStore()
+
+        console.log(store.state)
+        const deleteGoods = id => {
+            store.dispatch('cart/deleteCart', id)
+        }
+        return { deleteGoods }
+    }
 }
 </script>
 <style scoped lang="less">

@@ -44,6 +44,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 
     <div class="xtx-goods-page" v-if="goods">
         <div class="container">
@@ -90,6 +91,8 @@
             </div>
         </div>
     </div>
+=======
+>>>>>>> master
 </template>
 
 <script>
@@ -218,6 +221,7 @@ const useGoods = () => {
     min-height: 600px;
     background: #fff;
     margin-top: 20px;
+<<<<<<< HEAD
 
     min-height: 600px;
     background: #fff;
@@ -252,5 +256,7 @@ const useGoods = () => {
     min-height: 600px;
     background: #fff;
     margin-top: 20px;
+=======
+>>>>>>> master
 }
 </style>

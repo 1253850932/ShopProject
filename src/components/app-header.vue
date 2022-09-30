@@ -7,7 +7,6 @@
                 <i class="iconfont icon-search"></i>
                 <input type="text" placeholder="搜一搜" />
             </div>
-            <!-- 购物车组件 -->
             <AppHeaderCart />
         </div>
     </header>
@@ -15,7 +14,7 @@
 
 <script>
 import AppHeaderNav from './app-header-nav'
-import AppHeaderCart from './app-header-cart'
+import AppHeaderCart from './app-header-cart.vue'
 export default {
     name: 'AppHeader',
     components: { AppHeaderNav, AppHeaderCart }

@@ -26,6 +26,11 @@ export default {
             }
             // 追加新的
             state.list.unshift(payload)
+        },
+        // 删除购物车商品
+        deleteCart(state, skuId) {
+            const index = state.list.findIndex(item => item.skuId === skuId)
+            state.list.splice(index, 1)
         }
     },
     actions: {
@@ -42,6 +47,34 @@ export default {
                     resolve()
                 }
             })
+        },
+        deleteCart(crx, payload) {
+            return new Promise((resolve, reject) => {
+                // crx.rootState 拿到根状态
+                // crx.State 拿到局部状态
+                if (crx.rootState.user.profile.toke) {
+                    // 已登录
+                } else {
+                    // 未登录
+                    // 单条删除payload 就是skuID
+                    crx.commit('deleteCart', payload)
+                    resolve()
+                }
+            })
+        }
+    },
+    getters: {
+        // 有效商品列表
+        validList(state) {
+            return state.list.filter(item => item.stock > 0 && item.isEffective)
+        },
+        // 有效商品件数
+        validTotal(state, getters) {
+            return getters.validList.reduce((p, c) => p + c.count, 0)
+        },
+        // 有效商品总金额
+        validAmount(state, getters) {
+            return getters.validList.reduce((p, c) => p + c.nowPrice * 100 * c.count, 0) / 100
         }
     },
     getters: {
