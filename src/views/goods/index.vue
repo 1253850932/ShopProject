@@ -44,55 +44,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-
-    <div class="xtx-goods-page" v-if="goods">
-        <div class="container">
-            <!-- 面包屑 -->
-            <XtxBread>
-                <XtxBreadItem to="/">首页</XtxBreadItem>
-                <XtxBreadItem :to="`/category/${goods.categories[1].id}`">{{ goods.categories[1].name }}</XtxBreadItem>
-                <XtxBreadItem :to="`/category/sub/${goods.categories[0].id}`">{{ goods.categories[0].name }}</XtxBreadItem>
-                <XtxBreadItem to="/">{{ goods.name }}</XtxBreadItem>
-            </XtxBread>
-            <!-- 商品信息 -->
-            <div class="goods-info">
-                <div class="media">
-                    <GoodsImage :images="goods.mainPictures"></GoodsImage>
-                    <GoodsSales :goods="goods" />
-                </div>
-                <div class="spec">
-                    <!-- 名字区组件 -->
-                    <GoodsName :goods="goods" />
-                    <!-- 规格组件 -->
-                    <GoodsSku :goods="goods" @change="changeSku" />
-                    <!-- 数量选择组件 -->
-                    <XtxNumber v-model="count" :minVal="1" :maxVal="goods.inventory" label="数量" />
-                    <!-- 按钮组件 -->
-                    <XtxButton @click="insertCart()" type="primary" style="margin-top: 20px"> 加入购物车</XtxButton>
-                </div>
-            </div>
-            <!-- 商品推荐 -->
-            <GoodsRelevant v-if="goods" :goodsId="goods.id" />
-            <!-- 商品详情 -->
-            <div class="goods-footer">
-                <div class="goods-article">
-                    <!-- 商品+评价 -->
-                    <GoodsTabs />
-                    <!-- 注意事项 -->
-                    <GoodsWarn />
-                </div>
-                <!-- 24热榜+专题推荐 -->
-                <div class="goods-aside">
-                    <GoodsHot />
-                    <GoodsHot :type="2" />
-                    <GoodsHot :type="3" />
-                </div>
-            </div>
-        </div>
-    </div>
-=======
->>>>>>> master
 </template>
 
 <script>
@@ -221,7 +172,6 @@ const useGoods = () => {
     min-height: 600px;
     background: #fff;
     margin-top: 20px;
-<<<<<<< HEAD
 
     min-height: 600px;
     background: #fff;
@@ -256,7 +206,5 @@ const useGoods = () => {
     min-height: 600px;
     background: #fff;
     margin-top: 20px;
-=======
->>>>>>> master
 }
 </style>
