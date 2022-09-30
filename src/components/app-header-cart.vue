@@ -1,11 +1,11 @@
 <template>
     <div class="cart">
         <!-- 购物车图标 -->
-        <a class="curr" href="#">
+        <RouterLink to="/cart" class="curr" href="#">
             <i class="iconfont icon-cart"></i><em>{{ $store.getters['cart/validTotal'] }} </em>
-        </a>
+        </RouterLink>
         <!-- 购物车弹层 -->
-        <div class="layer">
+        <div class="layer" v-if="$store.getters['cart/validTotal'] && $route.path !== '/cart'">
             <div class="list">
                 <div class="item" v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
                     <RouterLink to="">
