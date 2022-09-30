@@ -62,5 +62,19 @@ export default {
                 }
             })
         }
+    },
+    getters: {
+        // 有效商品列表
+        validList(state) {
+            return state.list.filter(item => item.stock > 0 && item.isEffective)
+        },
+        // 有效商品件数
+        validTotal(state, getters) {
+            return getters.validList.reduce((p, c) => p + c.count, 0)
+        },
+        // 有效商品总金额
+        validAmount(state, getters) {
+            return getters.validList.reduce((p, c) => p + c.nowPrice * 100 * c.count, 0) / 100
+        }
     }
 }
