@@ -21,6 +21,11 @@
                     </thead>
                     <!-- 有效商品 -->
                     <tbody>
+                        <tr v-if="$store.getters['cart/validList'].length === 0">
+                            <td colspan="6">
+                                <CartNone />
+                            </td>
+                        </tr>
                         <tr v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
                             <td><XtxCheckbox @change="$event => checkOne(goods.skuId, $event)" :modelValue="goods.selected" /></td>
                             <td>
@@ -48,7 +53,7 @@
                             </td>
                             <td class="tc">
                                 <p><a href="javascript:;">移入收藏夹</a></p>
-                                <p><a class="green" href="javascript:;">删除</a></p>
+                                <p><a @click="deleteGood(goods.skuId)" class="green" href="javascript:;">删除</a></p>
                                 <p><a href="javascript:;">找相似</a></p>
                             </td>
                         </tr>
@@ -79,7 +84,7 @@
                                 <p>&yen;{{ (Math.round(goods.nowPrice * 100) * goods.count) / 100 }}</p>
                             </td>
                             <td class="tc">
-                                <p><a class="green" href="javascript:;">删除</a></p>
+                                <p><a @click="deleteGood(goods.skuId)" class="green" href="javascript:;">删除</a></p>
                                 <p><a href="javascript:;">找相似</a></p>
                             </td>
                         </tr>
@@ -90,7 +95,7 @@
             <div class="action">
                 <div class="batch">
                     <XtxCheckbox @change="checkAll" :modelValue="$store.getters['cart/isCheckedAll']">全选</XtxCheckbox>
-                    <a href="javascript:;">删除商品</a>
+                    <a href="javascript:;" @click="deleteAllCart">删除商品</a>
                     <a href="javascript:;">移入收藏夹</a>
                     <a href="javascript:;">清空失效商品</a>
                 </div>
@@ -107,11 +112,12 @@
 </template>
 <script>
 import GoodRelevant from '@/views/goods/components/goods-relevant'
+import CartNone from './components/cart-none.vue'
 import { useStore } from 'vuex'
 
 export default {
     name: 'XtxCartPage',
-    components: { GoodRelevant },
+    components: { GoodRelevant, CartNone },
     setup() {
         const store = useStore()
         // 单选
@@ -122,7 +128,15 @@ export default {
         const checkAll = selected => {
             store.dispatch('cart/checkAllCart', selected)
         }
-        return { checkOne, checkAll }
+        // 删除商品
+        const deleteGood = skuId => {
+            store.dispatch('cart/deleteCart', { skuId })
+        }
+        // 清空购物车
+        const deleteAllCart = () => {
+            store.dispatch('cart/deleteAllCart')
+        }
+        return { checkOne, checkAll, deleteGood, deleteAllCart }
     }
 }
 </script>

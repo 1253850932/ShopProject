@@ -43,6 +43,9 @@ export default {
         deleteCart(state, skuId) {
             const index = state.list.findIndex(item => item.skuId === skuId)
             state.list.splice(index, 1)
+        },
+        deleteAllCart(state, skuId) {
+            state.list.length = 0
         }
     },
     actions: {
@@ -106,6 +109,10 @@ export default {
                     resolve()
                 }
             })
+        },
+        // 清空购物车
+        deleteAllCart(ctx) {
+            ctx.commit('deleteAllCart')
         }
     },
     getters: {
