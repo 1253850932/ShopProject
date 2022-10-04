@@ -75,21 +75,26 @@ export default {
         // 有效商品总金额
         validAmount(state, getters) {
             return getters.validList.reduce((p, c) => p + c.nowPrice * 100 * c.count, 0) / 100
-        }
-    },
-    getters: {
-        // 有效商品列表
-        // 有效商品： 库存  > 0  ==》stock 商品标识符为 true ==》isEffective
-        validList(state) {
-            return state.list.filter(goods => goods.stock > 0 && goods.isEffective)
         },
-        // 有效商品总件数
-        validTotal(state, getters) {
-            return getters.validList.reduce((p, c) => p + c.count, 0)
+        // 无效商品列表
+        inValidList(state) {
+            return state.list.filter(item => item.stock <= 0 || !item.isEffective)
         },
-        // 有效商品总金额
-        validAmount(state, getters) {
-            return getters.validList.reduce((p, c) => p + c.count * c.nowPrice, 0)
+        // 已选商品列表
+        selectedList(state, getters) {
+            return getters.validList.filter(item => item.selected)
+        },
+        // 已选商品总件数
+        selectedTotal(state, getters) {
+            return getters.selectedList.reduce((p, c) => p + c.count, 0)
+        },
+        // 已选商品总金额
+        selectedAmount(state, getters) {
+            return getters.selectedList.reduce((p, c) => p + c.nowPrice * 100 * c.count, 0) / 100
+        },
+        // 是否全选
+        isCheckedAll(state, getters) {
+            return getters.selectedList.length !== 0 && getters.validList.length === getters.selectedList.length
         }
     }
 }
