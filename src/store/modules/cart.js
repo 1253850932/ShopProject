@@ -47,45 +47,62 @@ export default {
     },
     actions: {
         // 加入购物车
-        insertCart(crx, payload) {
+        insertCart(ctx, payload) {
             return new Promise((resolve, reject) => {
-                // crx.rootState 拿到根状态
-                // crx.State 拿到局部状态
-                if (crx.rootState.user.profile.toke) {
+                // ctx.rootState 拿到根状态
+                // ctx.State 拿到局部状态
+                if (ctx.rootState.user.profile.toke) {
                     // 已登录
                 } else {
                     // 未登录
-                    crx.commit('insertCart', payload)
+                    ctx.commit('insertCart', payload)
+                    resolve()
+                }
+            })
+        },
+        // 全选与取消全选
+        checkAllCart(ctx, selected) {
+            // 必须传入skuId  可选： selected count
+            return new Promise((resolve, reject) => {
+                // ctx.rootState 拿到根状态
+                // ctx.State 拿到局部状态
+                if (ctx.rootState.user.profile.toke) {
+                    // 已登录
+                } else {
+                    // 未登录
+                    ctx.getters.validList.forEach(goods => {
+                        ctx.commit('updateCart', { skuId: goods.skuId, selected })
+                    })
                     resolve()
                 }
             })
         },
         // 修改购物车 （选中状态，数量)
-        updateCart(crx, goods) {
+        updateCart(ctx, goods) {
             // 必须传入skuId  可选： selected count
             return new Promise((resolve, reject) => {
-                // crx.rootState 拿到根状态
-                // crx.State 拿到局部状态
-                if (crx.rootState.user.profile.toke) {
+                // ctx.rootState 拿到根状态
+                // ctx.State 拿到局部状态
+                if (ctx.rootState.user.profile.toke) {
                     // 已登录
                 } else {
                     // 未登录
-                    crx.commit('updateCart', goods)
+                    ctx.commit('updateCart', goods)
                     resolve()
                 }
             })
         },
         // 删除购物车
-        deleteCart(crx, payload) {
+        deleteCart(ctx, payload) {
             return new Promise((resolve, reject) => {
-                // crx.rootState 拿到根状态
-                // crx.State 拿到局部状态
-                if (crx.rootState.user.profile.toke) {
+                // ctx.rootState 拿到根状态
+                // ctx.State 拿到局部状态
+                if (ctx.rootState.user.profile.toke) {
                     // 已登录
                 } else {
                     // 未登录
                     // 单条删除payload 就是skuID
-                    crx.commit('deleteCart', payload)
+                    ctx.commit('deleteCart', payload)
                     resolve()
                 }
             })

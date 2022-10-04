@@ -9,7 +9,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th width="120"><XtxCheckbox :modelValue="$store.getters['cart/isCheckedAll']">全选</XtxCheckbox></th>
+                            <th width="120">
+                                <XtxCheckbox @change="checkAll" :modelValue="$store.getters['cart/isCheckedAll']">全选</XtxCheckbox>
+                            </th>
                             <th width="400">商品信息</th>
                             <th width="220">单价</th>
                             <th width="180">数量</th>
@@ -87,7 +89,7 @@
             <!-- 操作栏 -->
             <div class="action">
                 <div class="batch">
-                    <XtxCheckbox :modelValue="$store.getters['cart/isCheckedAll']">全选</XtxCheckbox>
+                    <XtxCheckbox @change="checkAll" :modelValue="$store.getters['cart/isCheckedAll']">全选</XtxCheckbox>
                     <a href="javascript:;">删除商品</a>
                     <a href="javascript:;">移入收藏夹</a>
                     <a href="javascript:;">清空失效商品</a>
@@ -114,17 +116,20 @@ export default {
         const store = useStore()
         // 单选
         const checkOne = (skuId, selected) => {
-            console.log(skuId, selected)
             store.dispatch('cart/updateCart', { skuId, selected })
         }
-        return { checkOne }
+        // 全选
+        const checkAll = selected => {
+            store.dispatch('cart/checkAllCart', selected)
+        }
+        return { checkOne, checkAll }
     }
 }
 </script>
 <style scoped lang="less">
 .tc {
     text-align: center;
-    .xtx-numbox {
+    .xtx-number {
         margin: 0 auto;
         width: 120px;
     }
