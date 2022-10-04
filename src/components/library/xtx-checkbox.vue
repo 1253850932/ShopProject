@@ -7,7 +7,6 @@
 </template>
 <script>
 import { useVModel } from '@vueuse/core'
-import { ref, watch } from 'vue'
 // v-model  ====>  :modelValue  +   @update:modelValue
 export default {
     name: 'XtxCheckbox',

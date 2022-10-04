@@ -20,10 +20,10 @@
                     <!-- 有效商品 -->
                     <tbody>
                         <tr v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
-                            <td><XtxCheckbox :modelValue="goods.selected" /></td>
+                            <td><XtxCheckbox @change="$event => checkOne(goods.skuId, $event)" :modelValue="goods.selected" /></td>
                             <td>
                                 <div class="goods">
-                                    <RouterLink :to="goods.id">
+                                    <RouterLink :to="`product/${goods.id}`">
                                         <img :src="goods.picture" alt="" />
                                     </RouterLink>
                                     <div>
@@ -60,8 +60,8 @@
                             <td><XtxCheckbox style="color: #eee" /></td>
                             <td>
                                 <div class="goods">
-                                    <RouterLink :to="goods.id">
-                                        <img :src="goods.picture" alt="" />
+                                    <RouterLink :to="`/product/${goods.id}`">
+                                        <img :src="goods.picture" />
                                     </RouterLink>
                                     <div>
                                         <p class="name ellipsis">{{ goods.name }}</p>
@@ -105,10 +105,20 @@
 </template>
 <script>
 import GoodRelevant from '@/views/goods/components/goods-relevant'
-import XtxNumber from '@/components/library/xtx-number.vue'
+import { useStore } from 'vuex'
+
 export default {
     name: 'XtxCartPage',
-    components: { GoodRelevant, XtxNumber }
+    components: { GoodRelevant },
+    setup() {
+        const store = useStore()
+        // 单选
+        const checkOne = (skuId, selected) => {
+            console.log(skuId, selected)
+            store.dispatch('cart/updateCart', { skuId, selected })
+        }
+        return { checkOne }
+    }
 }
 </script>
 <style scoped lang="less">

@@ -27,6 +27,18 @@ export default {
             // 追加新的
             state.list.unshift(payload)
         },
+        // 修改购物车商品
+        updateCart(state, goods) {
+            // goods中字段有可能不完整，goods有的信息才去修改。
+            // 1. goods中必需又skuId，才能找到对应的商品信息
+            const updateGoods = state.list.find(item => item.skuId === goods.skuId)
+            for (const key in goods) {
+                // 布尔类型 false 值需要使用
+                if (goods[key] !== null && goods[key] !== undefined && goods[key] !== '') {
+                    updateGoods[key] = goods[key]
+                }
+            }
+        },
         // 删除购物车商品
         deleteCart(state, skuId) {
             const index = state.list.findIndex(item => item.skuId === skuId)
@@ -48,6 +60,22 @@ export default {
                 }
             })
         },
+        // 修改购物车 （选中状态，数量)
+        updateCart(crx, goods) {
+            // 必须传入skuId  可选： selected count
+            return new Promise((resolve, reject) => {
+                // crx.rootState 拿到根状态
+                // crx.State 拿到局部状态
+                if (crx.rootState.user.profile.toke) {
+                    // 已登录
+                } else {
+                    // 未登录
+                    crx.commit('updateCart', goods)
+                    resolve()
+                }
+            })
+        },
+        // 删除购物车
         deleteCart(crx, payload) {
             return new Promise((resolve, reject) => {
                 // crx.rootState 拿到根状态
@@ -78,7 +106,8 @@ export default {
         },
         // 无效商品列表
         inValidList(state) {
-            return state.list.filter(item => item.stock <= 0 || !item.isEffective)
+            console.log(state.list.filter(goods => goods.stock <= 0 || !goods.isEffective))
+            return state.list.filter(goods => goods.stock <= 0 || !goods.isEffective)
         },
         // 已选商品列表
         selectedList(state, getters) {
