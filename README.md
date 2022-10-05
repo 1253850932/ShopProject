@@ -18,17 +18,17 @@ vue在元素创建之后必须延迟一会才会有过渡效果
 > this.$message({type:'error',text:'提示文字'})  
 
 
-`1.`导入消息提醒组件  
+1. 导入消息提醒组件  
 `import { createVNode, render } from 'vue'`
-`2.`准备一个装载组件的DOM容器  
+2. 准备一个装载组件的DOM容器  
 ```js
 	const div = document.createElement('div')
 	div.setAttribute('class', 'xtx-message-container')
 	document.body.appendChild(div)
 ```
-`3.`将组件编译为虚拟节点（dom）  
+3. 将组件编译为虚拟节点（dom）  
 *createVNode (组件，属性对象（props)*
 `const vnode = createVNode(XtxMessage, { type, text })`
-`4.`将虚拟节点渲染在容器中  
+4. 将虚拟节点渲染在容器中  
 *render(虚拟节点，DOM容器)*
 `render(vnode, div)`
