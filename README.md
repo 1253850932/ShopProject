@@ -13,8 +13,8 @@ vue在元素创建之后必须延迟一会才会有过渡效果
 
 ## vue组件函数式调用
 > 提供一个能够显示xtx-message组件的函数
-> 这个函数将来：导入直接使用，也可以挂载在vue实例原型上
-> import Message from 'Message.js' 使用Message ({type:'error',text:'提示文字'})
+>>这个函数将来：导入直接使用，也可以挂载在vue实例原型上
+>> import Message from 'Message.js' 使用Message ({type:'error',text:'提示文字'})
 > this.$message({type:'error',text:'提示文字'})
 
 
