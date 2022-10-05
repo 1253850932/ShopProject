@@ -115,7 +115,7 @@ export default {
             ctx.commit('deleteAllCart')
         },
         // 批量删除选中商品
-        batchDeleteCart(ctx) {
+        batchDeleteCart(ctx, isClear) {
             return new Promise((resolve, reject) => {
                 if (ctx.rootState.user.profile.toke) {
                     // 已登录
@@ -123,7 +123,7 @@ export default {
                     // 未登录
                     // 单条删除payload 就是skuID
                     // 1. 获取选中商品列表，进行遍历调用deleteCart mutataions函数
-                    ctx.getters.selectedList.forEach(item => {
+                    ctx.getters[isClear ? 'invalidList' : 'selectedList'].forEach(item => {
                         ctx.commit('deleteCart', item.skuId)
                     })
                     resolve()

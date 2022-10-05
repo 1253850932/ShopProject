@@ -46,7 +46,7 @@
                                 </p>
                             </td>
                             <td class="tc">
-                                <XtxNumber :modelValue="goods.count" />
+                                <XtxNumber :max="goods.stock" @change="$event => changeCount(goods.skuId, $event)" :modelValue="goods.count" />
                             </td>
                             <td class="tc">
                                 <p class="f16 red">&yen;{{ (Math.round(goods.nowPrice * 100) * goods.count) / 100 }}</p>
@@ -95,9 +95,9 @@
             <div class="action">
                 <div class="batch">
                     <XtxCheckbox @change="checkAll" :modelValue="$store.getters['cart/isCheckedAll']">全选</XtxCheckbox>
-                    <a href="javascript:;" @click="batchDeleteCart">删除商品</a>
+                    <a href="javascript:;" @click="batchDeleteCart(false)">删除商品</a>
                     <a href="javascript:;">移入收藏夹</a>
-                    <a href="javascript:;">清空失效商品</a>
+                    <a href="javascript:;" @click="batchDeleteCart(true)">清空失效商品</a>
                 </div>
                 <div class="total">
                     共 {{ $store.getters['cart/validList'].length }} 件商品，已选择 {{ $store.getters['cart/selectedList'].length }} 件，商品合计：
@@ -140,12 +140,16 @@ export default {
             store.dispatch('cart/deleteAllCart')
         }
         // 批量删除
-        const batchDeleteCart = params => {
-            Confirm({ text: '确认删除已选商品吗？' }).then(() => {
-                store.dispatch('cart/batchDeleteCart')
+        const batchDeleteCart = isClear => {
+            Confirm({ text: `您确定从购物车删除${isClear ? '失效' : '选中'}的商品吗？` }).then(() => {
+                store.dispatch('cart/batchDeleteCart', isClear)
             })
         }
-        return { checkOne, checkAll, deleteGood, deleteAllCart, batchDeleteCart }
+        // 修改数量
+        const changeCount = (skuId, count) => {
+            store.dispatch('cart/updateCart', { skuId, count })
+        }
+        return { checkOne, checkAll, deleteGood, deleteAllCart, batchDeleteCart, changeCount }
     }
 }
 </script>
