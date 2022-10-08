@@ -1,4 +1,4 @@
-import { mergeLocalCart } from '@/api/cart'
+import { deleteCart, findCartList, insertCart, mergeLocalCart } from '@/api/cart'
 
 // 购物车模块
 export default {
@@ -50,33 +50,40 @@ export default {
             state.list.length = 0
         },
         // 设置购物车
-        setCart(state, payload) {
+        setCartList(state, payload) {
             // payload 为空数组 - 清空， 为有值数组，设置
+            if (payload) {
+                state.list = []
+            }
             state.list = payload
         }
     },
     actions: {
-        // 合并购物车
-        async mergeCart(ctx) {
-            // 准备合并参数
-            const cartList = ctx.state.list.map(goods => {
-                return {
-                    skuId: goods.skuId,
-                    selected: goods.selected,
-                    count: goods.count
-                }
+        // 合并本地购物车
+        async mergeLocalCart(ctx) {
+            // 存储token后调用合并API接口函数进行购物合并
+            const cartList = ctx.getters.validList.map(({ skuId, selected, count }) => {
+                return { skuId, selected, count }
             })
             await mergeLocalCart(cartList)
-            // 合并成功 ,清空本地购物车
-            ctx.commit('setCart', [])
+            // 合并成功将本地购物车删除
+            ctx.commit('setCartList', [])
         },
         // 加入购物车
         insertCart(ctx, payload) {
             return new Promise((resolve, reject) => {
                 // ctx.rootState 拿到根状态
                 // ctx.State 拿到局部状态
-                if (ctx.rootState.user.profile.toke) {
+                if (ctx.rootState.user.profile.token) {
                     // 已登录
+                    insertCart(payload)
+                        .then(() => {
+                            return findCartList()
+                        })
+                        .then(data => {
+                            ctx.commit('setCartList', data.result)
+                            resolve()
+                        })
                 } else {
                     // 未登录
                     ctx.commit('insertCart', payload)
@@ -90,7 +97,7 @@ export default {
             return new Promise((resolve, reject) => {
                 // ctx.rootState 拿到根状态
                 // ctx.State 拿到局部状态
-                if (ctx.rootState.user.profile.toke) {
+                if (ctx.rootState.user.profile.token) {
                     // 已登录
                 } else {
                     // 未登录
@@ -107,7 +114,7 @@ export default {
             return new Promise((resolve, reject) => {
                 // ctx.rootState 拿到根状态
                 // ctx.State 拿到局部状态
-                if (ctx.rootState.user.profile.toke) {
+                if (ctx.rootState.user.profile.token) {
                     // 已登录
                 } else {
                     // 未登录
@@ -121,8 +128,18 @@ export default {
             return new Promise((resolve, reject) => {
                 // ctx.rootState 拿到根状态
                 // ctx.State 拿到局部状态
-                if (ctx.rootState.user.profile.toke) {
+                if (ctx.rootState.user.profile.token) {
                     // 已登录
+                    console.log(payload.skuId)
+                    deleteCart([payload.skuId])
+                        .then(() => {
+                            return findCartList()
+                        })
+                        .then(data => {
+                            ctx.commit('setCartList', data.result)
+                            console.log(data.result)
+                            resolve()
+                        })
                 } else {
                     // 未登录
                     // 单条删除payload 就是skuID
@@ -138,8 +155,18 @@ export default {
         // 批量删除选中商品
         batchDeleteCart(ctx, isClear) {
             return new Promise((resolve, reject) => {
-                if (ctx.rootState.user.profile.toke) {
+                if (ctx.rootState.user.profile.token) {
                     // 已登录
+                    const ids = ctx.getters[isClear ? 'invalidList' : 'selectedList'].map(item => item.skuId)
+                    console.log(ids)
+                    deleteCart(ids)
+                        .then(() => {
+                            return findCartList()
+                        })
+                        .then(data => {
+                            ctx.commit('setCartList', data.result)
+                            resolve()
+                        })
                 } else {
                     // 未登录
                     ctx.getters[isClear ? 'invalidList' : 'selectedList'].forEach(item => {
@@ -149,10 +176,10 @@ export default {
                 }
             })
         },
-        // 批量删除选中商品
+        // 更新商品
         updateCartSku(ctx, { oldSkuId, newSku }) {
             return new Promise((resolve, reject) => {
-                if (ctx.rootState.user.profile.toke) {
+                if (ctx.rootState.user.profile.token) {
                     // 已登录
                 } else {
                     // 未登录

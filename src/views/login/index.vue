@@ -23,10 +23,9 @@ import LoginHeader from './components/login-header.vue'
 import LoginFooter from './components/login-footer.vue'
 import LoginForm from './components/login-form.vue'
 import { ref } from 'vue'
-import XtxMessage from '@/components/library/xtx-message.vue'
 export default {
     name: 'PageLogin',
-    components: { LoginHeader, LoginFooter, LoginForm, XtxMessage },
+    components: { LoginHeader, LoginFooter, LoginForm },
     setup() {
         const activeName = ref('account')
         return { activeName }

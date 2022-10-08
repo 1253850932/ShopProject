@@ -60,7 +60,7 @@
                         </tr>
                     </tbody>
                     <!-- 无效商品 -->
-                    <tbody v-if="$store.getters['cart/inValidList'].length">
+                    <!-- <tbody v-if="$store.getters['cart/inValidList'].length">
                         <tr>
                             <td colspan="6"><h3 class="tit">失效商品</h3></td>
                         </tr>
@@ -89,7 +89,7 @@
                                 <p><a href="javascript:;">找相似</a></p>
                             </td>
                         </tr>
-                    </tbody>
+                    </tbody> -->
                 </table>
             </div>
             <!-- 操作栏 -->
@@ -103,7 +103,7 @@
                 <div class="total">
                     共 {{ $store.getters['cart/validList'].length }} 件商品，已选择 {{ $store.getters['cart/selectedList'].length }} 件，商品合计：
                     <span class="red">¥{{ $store.getters['cart/selectedAmount'] }}</span>
-                    <XtxButton type="primary">下单结算</XtxButton>
+                    <XtxButton type="primary" @click="goCheckout()">下单结算</XtxButton>
                 </div>
             </div>
             <!-- 猜你喜欢 -->
@@ -117,6 +117,8 @@ import CartNone from './components/cart-none.vue'
 import CartSku from './components/cart-sku.vue'
 import { useStore } from 'vuex'
 import Confirm from '@/components/library/Confirm'
+import Message from '@/components/library/Message'
+import { useRouter } from 'vue-router'
 export default {
     name: 'XtxCartPage',
     components: { GoodRelevant, CartNone, CartSku },
@@ -135,6 +137,7 @@ export default {
             // store.dispatch('cart/deleteCart', { skuId })
             Confirm({ text: '确定删除吗' }).then(() => {
                 store.dispatch('cart/deleteCart', { skuId })
+                Message({ type: 'error', text: '删除成功' })
             })
         }
         // 清空购物车
@@ -145,6 +148,7 @@ export default {
         const batchDeleteCart = isClear => {
             Confirm({ text: `您确定从购物车删除${isClear ? '失效' : '选中'}的商品吗？` }).then(() => {
                 store.dispatch('cart/batchDeleteCart', isClear)
+                Message({ type: 'error', text: '删除成功' })
             })
         }
         // 修改数量
@@ -156,7 +160,26 @@ export default {
             console.log(newSku)
             store.dispatch('cart/updateCartSku', { oldSkuId, newSku })
         }
-        return { checkOne, checkAll, deleteGood, deleteAllCart, batchDeleteCart, changeCount, updateCart }
+
+        // 跳转结算页面
+        const router = useRouter()
+        const goCheckout = () => {
+            // 1. 判断是否选择有效商品
+            // 2. 判断是否已经登录，未登录 弹窗提示
+            // 3. 进行跳转 （需要做访问权限控制）
+            if (store.getters['cart/selectedTotal'] === 0) return Message({ text: '至少选中一件商品才能结算' })
+            if (!store.state.user.profile.token) {
+                Confirm({ text: '下单结算需要登录，您是否去登录？' })
+                    .then(() => {
+                        // 点击确认
+                        router.push('/member/checkout')
+                    })
+                    .catch(e => {})
+            } else {
+                router.push('/member/checkout')
+            }
+        }
+        return { checkOne, checkAll, deleteGood, deleteAllCart, batchDeleteCart, changeCount, updateCart, goCheckout }
     }
 }
 </script>

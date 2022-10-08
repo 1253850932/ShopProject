@@ -153,7 +153,7 @@ export default {
                     // 存储用户信息
                     const { id, account, password, nickname, token, avatar } = data.result
                     store.commit('user/setUser', { id, account, password, nickname, token, avatar })
-                    store.dispatch('cart/mergeCart').then(() => {
+                    store.dispatch('cart/mergeLocalCart').then(() => {
                         // 进行跳转
                         router.push(route.query.redirectUrl || '/')
                         // 消息提示

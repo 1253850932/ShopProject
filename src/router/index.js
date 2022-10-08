@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
+import store from '@/store'
 const routes = [
     // 一级路由布局
     {
@@ -25,6 +25,10 @@ const routes = [
             {
                 path: '/cart',
                 component: () => import('@/views/cart/index')
+            },
+            {
+                path: '/member/checkout',
+                component: () => import('@/views/member/pay/checkout')
             }
         ]
     },
@@ -40,5 +44,13 @@ const router = createRouter({
         return { left: 0, top: 0 }
     }
 })
-
+router.beforeEach((to, from, next) => {
+    // 用户信息
+    const { token } = store.state.user.profile
+    // 跳转去member开头的地址却没有登录
+    if (to.path.startsWith('/member') && !token) {
+        next({ path: '/login', query: { redirectUrl: to.fullPath } })
+    }
+    next()
+})
 export default router
