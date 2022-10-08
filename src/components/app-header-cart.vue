@@ -40,7 +40,6 @@ export default {
     setup() {
         const store = useStore()
 
-        console.log(store.state)
         const deleteGoods = id => {
             store.dispatch('cart/deleteCart', id)
         }

@@ -114,7 +114,6 @@ export default {
             updateDisabledStatus(props.goods.specs, pathMap)
             // 触发change事件将sku数据传递出去
             const selectedArr = getSelectedArr(props.goods.specs).filter(value => value)
-            console.log(selectedArr)
             if (selectedArr.length === props.goods.specs.length) {
                 const skuIds = pathMap[selectedArr.join(spliter)]
                 const sku = props.goods.skus.find(sku => sku.id === skuIds[0])

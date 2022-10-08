@@ -121,11 +121,31 @@ export default {
                     // 已登录
                 } else {
                     // 未登录
-                    // 单条删除payload 就是skuID
-                    // 1. 获取选中商品列表，进行遍历调用deleteCart mutataions函数
                     ctx.getters[isClear ? 'invalidList' : 'selectedList'].forEach(item => {
                         ctx.commit('deleteCart', item.skuId)
                     })
+                    resolve()
+                }
+            })
+        },
+        // 批量删除选中商品
+        updateCartSku(ctx, { oldSkuId, newSku }) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.toke) {
+                    // 已登录
+                } else {
+                    // 未登录
+                    // 1.找出旧的商品信息
+                    // 2.删除旧的商品数据
+                    // 3.根据新的和旧的 sku信息，合并成一条新的商品信息
+                    // 4.添加新的商品信息
+                    const oldGoods = ctx.state.list.find(item => item.skuId === oldSkuId)
+                    ctx.commit('deleteCart', oldSkuId)
+                    const { skuId, price: nowPrice, inventory: stock, specsTest: attrsText } = newSku
+                    console.log(newSku.specsTest)
+                    const newGoods = { ...oldGoods, skuId, nowPrice, stock, attrsText }
+                    console.log(newGoods)
+                    ctx.commit('insertCart', newGoods)
                     resolve()
                 }
             })
@@ -146,7 +166,6 @@ export default {
         },
         // 无效商品列表
         inValidList(state) {
-            console.log(state.list.filter(goods => goods.stock <= 0 || !goods.isEffective))
             return state.list.filter(goods => goods.stock <= 0 || !goods.isEffective)
         },
         // 已选商品列表
