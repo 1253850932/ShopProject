@@ -1,3 +1,5 @@
+import { mergeLocalCart } from '@/api/cart'
+
 // 购物车模块
 export default {
     namespaced: true,
@@ -46,9 +48,28 @@ export default {
         },
         deleteAllCart(state, skuId) {
             state.list.length = 0
+        },
+        // 设置购物车
+        setCart(state, payload) {
+            // payload 为空数组 - 清空， 为有值数组，设置
+            state.list = payload
         }
     },
     actions: {
+        // 合并购物车
+        async mergeCart(ctx) {
+            // 准备合并参数
+            const cartList = ctx.state.list.map(goods => {
+                return {
+                    skuId: goods.skuId,
+                    selected: goods.selected,
+                    count: goods.count
+                }
+            })
+            await mergeLocalCart(cartList)
+            // 合并成功 ,清空本地购物车
+            ctx.commit('setCart', [])
+        },
         // 加入购物车
         insertCart(ctx, payload) {
             return new Promise((resolve, reject) => {

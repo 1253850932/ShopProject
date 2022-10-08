@@ -8,12 +8,19 @@ import request from '@/utils/request'
 export const getSpecsAndSkus = skuId => {
     return request(`/goods/sku/${skuId}`, 'get')
 }
+
 /**
  * 合并
- * @param {Array} cartList  - 本地购物车数组
+ * @param {Array<object>} cartList  - 本地购物车数组
+ * @param {string} skuId  -skuId
+ * @param {boolean} selected  -是否选中
+ * @param {integer} count  -数量
  * @returns
  */
-
 export const mergeLocalCart = cartList => {
-    return request(' /member/cart/merge', 'post', cartList)
+    return request('/member/cart/merge', 'post', cartList)
+}
+
+export const findCartList = () => {
+    return request('/member/cart', 'get')
 }
