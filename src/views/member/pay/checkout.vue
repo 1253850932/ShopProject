@@ -10,7 +10,7 @@
                 <!-- 收货地址 -->
                 <h3 class="box-title">收货地址</h3>
                 <div class="box-body" v-if="checkoutInfo">
-                    <CheckoutAddress :list="checkoutInfo.userAddresses" />
+                    <CheckoutAddress @change="changeAddress" :list="checkoutInfo.userAddresses" />
                 </div>
                 <!-- 商品信息 -->
                 <h3 class="box-title">商品信息</h3>
@@ -92,18 +92,24 @@
 </template>
 <script>
 import { findCheckoutInfo } from '@/api/order'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import CheckoutAddress from './checkout-address.vue'
 export default {
     name: 'XtxPayCheckoutPage',
     components: { CheckoutAddress },
     setup(props) {
+        // 生成结算信息
         const checkoutInfo = ref(null)
         findCheckoutInfo().then(data => {
             checkoutInfo.value = data.result
-            console.log(checkoutInfo.value)
         })
-        return { checkoutInfo }
+        // 需要提交的字段
+        const requestParams = reactive({ addressId: null })
+        // 切换地址
+        const changeAddress = id => {
+            requestParams.addressId = id
+        }
+        return { checkoutInfo, changeAddress }
     }
 }
 </script>

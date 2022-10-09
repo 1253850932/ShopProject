@@ -2,11 +2,11 @@
     <div class="xtx-dialog" :class="{ fade }" v-show="visible">
         <div class="wrapper" :class="{ fade }">
             <div class="header">
-                <h3>切换收货地址</h3>
+                <h3>{{ title }}</h3>
                 <a href="JavaScript:;" @click="close()" class="iconfont icon-close-new"></a>
             </div>
             <div class="body">
-                {{ title }}
+                <slot></slot>
             </div>
             <div class="footer">
                 <slot name="footer" />
