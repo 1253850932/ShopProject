@@ -9,8 +9,8 @@
             <div class="wrapper">
                 <!-- 收货地址 -->
                 <h3 class="box-title">收货地址</h3>
-                <div class="box-body">
-                    <CheckoutAddress />
+                <div class="box-body" v-if="checkoutInfo">
+                    <CheckoutAddress :list="checkoutInfo.userAddresses" />
                 </div>
                 <!-- 商品信息 -->
                 <h3 class="box-title">商品信息</h3>
@@ -26,21 +26,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="i in 4" :key="i">
-                                <td>
-                                    <a href="javascript:;" class="info">
-                                        <img src="https://yanxuan-item.nosdn.127.net/cd9b2550cde8bdf98c9d083d807474ce.png" alt="" />
-                                        <div class="right">
-                                            <p>轻巧多用锅雪平锅 麦饭石不粘小奶锅煮锅</p>
-                                            <p>颜色：白色 尺寸：10cm 产地：日本</p>
-                                        </div>
-                                    </a>
-                                </td>
-                                <td>&yen;100.00</td>
-                                <td>2</td>
-                                <td>&yen;200.00</td>
-                                <td>&yen;200.00</td>
-                            </tr>
+                            <template v-if="checkoutInfo">
+                                <tr v-for="goods in checkoutInfo.goods" :key="goods.id">
+                                    <td>
+                                        <a href="javascript:;" class="info">
+                                            <img :src="goods.picture" alt="" />
+                                            <div class="right">
+                                                <p>{{ goods.name }}</p>
+                                                <p>{{ goods.attrsText }}</p>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>&yen;{{ goods.payPrice }}</td>
+                                    <td>{{ goods.count }}</td>
+                                    <td>&yen;{{ goods.totalPrice }}</td>
+                                    <td>&yen;{{ goods.totalPayPrice }}</td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
@@ -61,22 +63,22 @@
                 <!-- 金额明细 -->
                 <h3 class="box-title">金额明细</h3>
                 <div class="box-body">
-                    <div class="total">
+                    <div class="total" v-if="checkoutInfo">
                         <dl>
                             <dt>商品件数：</dt>
-                            <dd>5件</dd>
+                            <dd>{{ checkoutInfo.summary.goodsCount }}件</dd>
                         </dl>
                         <dl>
                             <dt>商品总价：</dt>
-                            <dd>¥5697.00</dd>
+                            <dd>¥{{ checkoutInfo.summary.totalPrice }}</dd>
                         </dl>
                         <dl>
                             <dt>运<i></i>费：</dt>
-                            <dd>¥0.00</dd>
+                            <dd>¥{{ checkoutInfo.summary.postFee }}</dd>
                         </dl>
                         <dl>
                             <dt>应付总额：</dt>
-                            <dd class="price">¥5697.00</dd>
+                            <dd class="price">¥{{ checkoutInfo.summary.totalPayPrice }}</dd>
                         </dl>
                     </div>
                 </div>
@@ -89,10 +91,20 @@
     </div>
 </template>
 <script>
+import { findCheckoutInfo } from '@/api/order'
+import { ref } from 'vue'
 import CheckoutAddress from './checkout-address.vue'
 export default {
     name: 'XtxPayCheckoutPage',
-    components: { CheckoutAddress }
+    components: { CheckoutAddress },
+    setup(props) {
+        const checkoutInfo = ref(null)
+        findCheckoutInfo().then(data => {
+            checkoutInfo.value = data.result
+            console.log(checkoutInfo.value)
+        })
+        return { checkoutInfo }
+    }
 }
 </script>
 <style scoped lang="less">

@@ -4,10 +4,10 @@
             <!-- <div class="none">您需要先添加收货地址才可提交订单。</div> -->
             <ul>
                 <li>
-                    <span>收<i />货<i />人：</span>朱超
+                    <span>收<i />货<i />人：</span>{{ showAddress.receiver }}
                 </li>
-                <li><span>联系方式：</span>132****2222</li>
-                <li><span>收货地址：</span>海南省三亚市解放路108号物质大厦1003室</li>
+                <li><span>联系方式：</span>{{ showAddress.contact.replace(/^(\d{3})\d{4}(\d{4})/, '$1****$2') }}</li>
+                <li><span>收货地址：</span>{{ showAddress.fullLocation }}{{ showAddress.address }}号</li>
             </ul>
             <a href="javascript:;">修改地址</a>
         </div>
@@ -29,12 +29,30 @@
 import { ref } from 'vue'
 export default {
     name: 'CheckoutAddress',
-    setup({ emit }) {
+    props: {
+        list: {
+            type: Array,
+            default: () => []
+        }
+    },
+    setup(props, { emit }) {
+        // 显示的地址
+        const showAddress = ref(null)
+        if (props.list.length) {
+            const defaultAddress = props.list.find(item => item.isDefault === 1)
+            if (defaultAddress) {
+                showAddress.value = defaultAddress
+                console.log(showAddress)
+            } else {
+                // eslint-disable-next-line vue/no-setup-props-destructure
+                showAddress.value = props.list[0]
+            }
+        }
         // 对话框显示隐藏
         const dialogVisible = ref(false)
-        // 默认通知一个地址ID给父
-        emit('change', dialogVisible.value?.id)
-        return { dialogVisible }
+        // 默认通知一个地址ID给父组件
+        // emit('change', dialogVisible.value?.id)
+        return { dialogVisible, showAddress }
     }
 }
 </script>

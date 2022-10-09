@@ -1,10 +1,10 @@
 // 提供首页相关api
+import request from '@/utils/request'
 /**
  *
  * @param {Integer}limit-品牌个数
  * @returns Promise
  */
-import request from '@/utils/request'
 
 export const findBrand = (limit = 6) => {
     return request('/home/brand', 'get', { limit })
