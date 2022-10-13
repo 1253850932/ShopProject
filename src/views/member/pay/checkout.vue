@@ -84,15 +84,17 @@
                 </div>
                 <!-- 提交订单 -->
                 <div class="submit">
-                    <XtxButton type="primary">提交订单</XtxButton>
+                    <XtxButton @click="submitOrder" type="primary">提交订单</XtxButton>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { findCheckoutInfo } from '@/api/order'
+import { findCheckoutInfo, createOrder } from '@/api/order'
+import Message from '@/components/library/Message'
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import CheckoutAddress from './checkout-address.vue'
 export default {
     name: 'XtxPayCheckoutPage',
@@ -102,14 +104,38 @@ export default {
         const checkoutInfo = ref(null)
         findCheckoutInfo().then(data => {
             checkoutInfo.value = data.result
+            // 设置提交时候的商品
+            requestParams.goods = checkoutInfo.value.goods.map(item => {
+                return {
+                    skuId: item.skuId,
+                    count: item.count
+                }
+            })
         })
-        // 需要提交的字段
-        const requestParams = reactive({ addressId: null })
         // 切换地址
         const changeAddress = id => {
             requestParams.addressId = id
+            console.log(requestParams.addressId)
         }
-        return { checkoutInfo, changeAddress }
+        // 需要提交的字段
+        const requestParams = reactive({
+            addressId: null,
+            deliveryTimeType: 1,
+            payType: 1,
+            buyerMessage: '',
+            goods: []
+        })
+
+        // 提交订单
+        const router = useRouter()
+        const submitOrder = () => {
+            console.log(requestParams.addressId)
+            if (!requestParams.addressId) return Message({ text: '请选择收货地址' })
+            createOrder(requestParams).then(data => {
+                router.push({ path: '/member/pay', query: { id: data.result.id } })
+            })
+        }
+        return { checkoutInfo, changeAddress, submitOrder }
     }
 }
 </script>
