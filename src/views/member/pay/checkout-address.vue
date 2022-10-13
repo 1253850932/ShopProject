@@ -14,7 +14,8 @@
         <div class="action">
             <XtxButton class="btn" @click="openDialog()">切换地址</XtxButton>
 
-            <XtxButton class="btn">添加地址</XtxButton>
+            <XtxButton class="btn" @click="openAddressEdit()">添加地址</XtxButton>
+            <!-- 添加地址 -->
         </div>
     </div>
     <XtxDialog title="切换收货地址" v-model:visible="dialogVisible">
@@ -32,11 +33,15 @@
             <XtxButton @click="confirmAddress()" type="primary">确认</XtxButton>
         </template>
     </XtxDialog>
+    <!-- 收货地址添加组件 -->
+    <AddressEdit ref="addressEdit" @on-success="successHandler" />
 </template>
 <script>
 import { ref } from 'vue'
+import AddressEdit from './components/address-edit.vue'
 export default {
     name: 'CheckoutAddress',
+    components: { AddressEdit },
     props: {
         list: {
             type: Array,
@@ -74,10 +79,20 @@ export default {
             // 默认通知一个地址ID给父组件
             emit('change', showAddress.value?.id)
         }
-
         // 选择的地址
         const selectedAddress = ref(null)
-        return { dialogVisible, showAddress, selectedAddress, openDialog, confirmAddress }
+        // 添加收货地址组件
+        const addressEdit = ref(null)
+        const openAddressEdit = () => {
+            addressEdit.value.open()
+        }
+
+        // 成功
+        const successHandler = formData => {
+            const json = JSON.stringify(formData) // 需要克隆下，不然使用的是对象的引用
+            props.list.unshift(JSON.parse(json))
+        }
+        return { dialogVisible, showAddress, selectedAddress, openDialog, confirmAddress, openAddressEdit, addressEdit, successHandler }
     }
 }
 </script>
