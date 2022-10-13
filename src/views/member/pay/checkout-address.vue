@@ -7,9 +7,9 @@
                     <span>收<i />货<i />人：</span>{{ showAddress.receiver }}
                 </li>
                 <li><span>联系方式：</span>{{ showAddress.contact.replace(/^(\d{3})\d{4}(\d{4})/, '$1****$2') }}</li>
-                <li><span>收货地址：</span>{{ showAddress.fullLocation }}{{ showAddress.address }}号</li>
+                <li><span>收货地址：</span>{{ showAddress.fullLocation.replace(/ /g, '') }}{{ showAddress.address }}号</li>
             </ul>
-            <a href="javascript:;">修改地址</a>
+            <a @click="openAddressEdit(showAddress)" v-if="showAddress" href="javascript:;">修改地址</a>
         </div>
         <div class="action">
             <XtxButton class="btn" @click="openDialog()">切换地址</XtxButton>
@@ -83,12 +83,18 @@ export default {
         const selectedAddress = ref(null)
         // 添加收货地址组件
         const addressEdit = ref(null)
-        const openAddressEdit = () => {
+        const openAddressEdit = addAddress => {
             addressEdit.value.open()
         }
 
         // 成功
         const successHandler = formData => {
+            const address = props.list.find(item => item.id === formData.id)
+            if (address) {
+                for (const key in address) {
+                    address[key] = address[key]
+                }
+            }
             const json = JSON.stringify(formData) // 需要克隆下，不然使用的是对象的引用
             props.list.unshift(JSON.parse(json))
         }
